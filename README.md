@@ -1,5 +1,11 @@
 # OANDA
 
+## Next action
+
+- Create daily automation to append yesterday candle to BigQuery
+
+## Overview
+
 Trading hours
 - Sunday 17:05 to Friday 16:59 in Eastern Time
 - There will be a six minute break between 16:59 - 17:05
@@ -30,11 +36,41 @@ API base URL
 
 ## Database
 
-- Transactions
-  - transaction_id
-  - time
-  - type
-    - STOP_LOSS_ORDER
+### Candles
+
+`usdjpy_ny_day_mid_candles`
+- `date`, date
+- `open`, float
+- `high`, float
+- `low`, float
+- `close`, float
+- `volumn`, integer
+- `write_timestamp`, timestamp
+
+### `activities`
+- `ticket`, integer
+- `datetime`, timestamp
+- `type`, string
+  - change trade (take profit order, stop loss order)
+  - buy market (open long)
+  - sell market (open short)
+  - market order
+  - sell market filled (close long)
+  - close trade (manually close current position)
+- `market`, string
+- `units`, integer
+- `price`, float
+- `spread_cost`, float
+- `profit`, float
+- `amount`, float
+- `commission`, float
+- `balance`, float
+
+### `transactions`
+- transaction_id
+- time
+- type
+  - STOP_LOSS_ORDER
 
 ## Metrics
 

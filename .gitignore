@@ -2,3 +2,4 @@
 .env
 .idea
 .ipynb_checkpoints
+compute-engine-default-sa.json
