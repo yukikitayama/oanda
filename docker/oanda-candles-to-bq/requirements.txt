@@ -1,0 +1,5 @@
+requests
+pytz
+pandas
+pandas-gbq
+python-dotenv
