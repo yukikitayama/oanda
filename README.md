@@ -3,6 +3,7 @@
 ## Get candles
 
 - https://developer.oanda.com/rest-live-v20/instrument-ep/
+- `time` is start time
 
 ## Overview
 
