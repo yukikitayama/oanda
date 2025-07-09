@@ -1,13 +1,15 @@
 # OANDA
 
-## Next action
+## Get candles
 
-- Create daily automation to append yesterday candle to BigQuery
+- https://developer.oanda.com/rest-live-v20/instrument-ep/
 
 ## Overview
 
 Trading hours
 - Sunday 17:05 to Friday 16:59 in Eastern Time
+  - At 5PM ET, a trading day ends and starts a new trading day
+  - e.g., 2025-07-09 9AM ET is still doing a candlestick of 2025-07-08T21?
 - There will be a six minute break between 16:59 - 17:05
 - During closed hours, a market order will be cancelled.
 - https://www.oanda.com/us-en/trading/hours-of-operation/

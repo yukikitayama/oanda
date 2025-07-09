@@ -9,6 +9,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_rows", None)
+pd.set_option("expand_frame_repr", False)
+
 API_KEY = os.environ["API_KEY"]
 API_URL = os.environ["API_URL"]
 ACCOUNT_ID = os.environ["ACCOUNT_ID"]
@@ -22,7 +26,8 @@ TABLE = "oanda.usdjpy_ny_day_mid_candles"
 def make_headers():
     return {
         "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept-Datetime-Format": "RFC3339"
     }
 
 
@@ -33,6 +38,9 @@ def get_candles(from_str, to_str):
         "granularity": GRANULARITY,
         "from": from_str,
         "to": to_str,
+        "smooth": False,
+        "includeFirst": True,
+        "dailyAlignment": 17,
         "alignmentTimezone": ALIGNMENT_TIMEZONE
     }
     r = requests.get(
@@ -44,7 +52,7 @@ def get_candles(from_str, to_str):
     # print("get_candles()")
     # print(f"Status code: {r.status_code}")
     # print(r.text)
-    # print(r.json()["candles"])
+    print(r.json()["candles"])
 
     candles = r.json()["candles"]
     return candles
@@ -78,21 +86,32 @@ def main():
     # Get candles yesterday
     from_str = (datetime.now(pytz.timezone("America/New_York")) - timedelta(days=1)).strftime("%Y-%m-%d")
     to_str = (datetime.now(pytz.timezone("America/New_York"))).strftime("%Y-%m-%d")
+
+    from_str = "2025-07-07T00:00:00Z"
+    to_str = "2025-07-08T23:00:00Z"
+
+    print(f"From: {from_str}, to: {to_str}")
+
     candles = get_candles(from_str, to_str)
 
     # Transform for BigQuery
     df = candles_to_df(candles)
 
     print("Data to upload")
+    # print(df.loc[df["date"] == from_str])
     print(df)
 
     # Upload to BigQuery
-    pandas_gbq.to_gbq(
-        df,
-        destination_table=TABLE,
-        if_exists="append",
-    )
-    print(f"Uploaded to {TABLE}")
+    # if len(df.loc[df["date"] == from_str]):
+    #     pandas_gbq.to_gbq(
+    #         df.loc[df["date"] == from_str],
+    #         destination_table=TABLE,
+    #         if_exists="append",
+    #     )
+    #     print(f"Uploaded to {TABLE}")
+    # else:
+    #     print("No data")
+
 
 
 if __name__ == "__main__":
